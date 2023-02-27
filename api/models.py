@@ -18,7 +18,7 @@ class File(models.Model):
 class Directory(models.Model):
     name = models.CharField(max_length=256, verbose_name='Название')
     files = models.ManyToManyField('File', blank=True, related_name='dirs', verbose_name='Файлы')
-    parent_dir = models.ForeignKey('self', on_delete=models.CASCADE, related_name='children',
+    parent_dir = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE, related_name='children',
                                    verbose_name='Родительская директория')
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='dirs',
                               verbose_name='Пользователь')
