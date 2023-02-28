@@ -15,3 +15,10 @@ class FileSerializer(serializers.ModelSerializer):
             'file',
             'owner'
         ]
+
+    def create(self, validated_data):
+        user = self.context.get('user')
+        file = validated_data.get('file')
+
+        file = File.objects.create(file=file, owner=user)
+        return file
