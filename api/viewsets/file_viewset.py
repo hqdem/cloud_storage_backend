@@ -3,7 +3,7 @@ from rest_framework import permissions
 from rest_framework.response import Response
 
 from ..models import File
-from ..serializers.file_serializers import FileSerializer
+from ..serializers.file_serializers import FileSerializer, FileCreateSerializer
 from ..permissions.file_permissions import CheckFileOwnerOnDelete
 
 
@@ -14,6 +14,8 @@ class FileViewSet(viewsets.ModelViewSet):
         return File.objects.select_related('owner').all()
 
     def get_serializer_class(self):
+        if self.action == 'create':
+            return FileCreateSerializer
         return FileSerializer
 
     def create(self, request, *args, **kwargs):
@@ -21,6 +23,8 @@ class FileViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(data=data, context={'user': request.user})
         if serializer.is_valid():
-            file = serializer.save()
-            return Response(FileSerializer(file).data, status=status.HTTP_201_CREATED)
+            obj = serializer.save()
+            if isinstance(obj, Response):
+                return obj
+            return Response(FileSerializer(obj).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
