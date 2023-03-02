@@ -6,10 +6,12 @@ from rest_framework.response import Response
 from ..models import Directory, File
 from ..serializers.directory_serializers import DirectorySerializer, DirectoryCreateSerializer
 from ..permissions.directory_permissions import CheckDirectoryOwner
+from ..filters.directory_filters import RootDirectoryFilter
 
 
 class DirectoryViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, CheckDirectoryOwner]
+    filter_backends = [RootDirectoryFilter]
 
     def get_queryset(self):
         user = self.request.user
