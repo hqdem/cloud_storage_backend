@@ -4,11 +4,11 @@ from rest_framework.response import Response
 
 from ..models import File
 from ..serializers.file_serializers import FileSerializer, FileCreateSerializer
-from ..permissions.file_permissions import CheckFileOwnerOnDelete
+from ..permissions.file_permissions import CheckFileOwner
 
 
 class FileViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, CheckFileOwnerOnDelete]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, CheckFileOwner]
 
     def get_queryset(self):
         return File.objects.select_related('owner').all()
