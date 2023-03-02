@@ -6,6 +6,7 @@ class File(models.Model):
     file = models.FileField(upload_to='files/%Y/%m/%d/', verbose_name='Файл')
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='files',
                               verbose_name='Пользователь')
+    shared_users = models.ManyToManyField(get_user_model(), blank=True, related_name='sharing_files', verbose_name='Общие файлы')
 
     class Meta:
         verbose_name = 'Файл'
@@ -22,6 +23,7 @@ class Directory(models.Model):
                                    verbose_name='Родительская директория')
     owner = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='dirs',
                               verbose_name='Пользователь')
+    shared_users = models.ManyToManyField(get_user_model(), blank=True, related_name='sharing_dirs', verbose_name='Общие директории')
 
     class Meta:
         verbose_name = 'Папка'
