@@ -5,10 +5,11 @@ from rest_framework.response import Response
 
 from ..models import Directory, File
 from ..serializers.directory_serializers import DirectorySerializer, DirectoryCreateSerializer
+from ..permissions.directory_permissions import CheckDirectoryOwner
 
 
 class DirectoryViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, CheckDirectoryOwner]
 
     def get_queryset(self):
         return Directory.objects.select_related('owner').prefetch_related('files', 'files__owner', 'children').all()
