@@ -18,9 +18,10 @@ class SubdirectorySerializer(serializers.ModelSerializer):
 
 class DirectorySerializer(serializers.ModelSerializer):
     files = FileSerializer(many=True, read_only=True)
-    owner = UserSerializer(read_only=True)
     parent_dir = SubdirectorySerializer(read_only=True)
     children_dirs = SubdirectorySerializer(many=True, read_only=True, source='children')
+    owner = UserSerializer(read_only=True)
+    shared_users = UserSerializer(many=True, read_only=True)
 
     class Meta:
         model = Directory
@@ -30,7 +31,8 @@ class DirectorySerializer(serializers.ModelSerializer):
             'parent_dir',
             'children_dirs',
             'files',
-            'owner'
+            'owner',
+            'shared_users'
         ]
 
 
