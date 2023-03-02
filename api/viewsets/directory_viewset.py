@@ -9,10 +9,12 @@ from ..permissions.directory_permissions import CheckDirectoryOwner
 
 
 class DirectoryViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, CheckDirectoryOwner]
+    permission_classes = [permissions.IsAuthenticated, CheckDirectoryOwner]
 
     def get_queryset(self):
-        return Directory.objects.select_related('owner').prefetch_related('files', 'files__owner', 'children').all()
+        user = self.request.user
+        return Directory.objects.select_related('owner').prefetch_related('files', 'files__owner', 'children').filter(
+            owner=user)
 
     def get_serializer_class(self):
         if self.action == 'create':

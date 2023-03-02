@@ -8,10 +8,11 @@ from ..permissions.file_permissions import CheckFileOwner
 
 
 class FileViewSet(viewsets.ModelViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, CheckFileOwner]
+    permission_classes = [permissions.IsAuthenticated, CheckFileOwner]
 
     def get_queryset(self):
-        return File.objects.select_related('owner').all()
+        user = self.request.user
+        return File.objects.select_related('owner').filter(owner=user)
 
     def get_serializer_class(self):
         if self.action == 'create':
