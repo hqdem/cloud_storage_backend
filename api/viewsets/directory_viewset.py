@@ -13,7 +13,7 @@ class DirectoryViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return Directory.objects.select_related('owner').prefetch_related('files', 'files__owner', 'children').filter(
+        return Directory.objects.select_related('owner', 'parent_dir').prefetch_related('files', 'files__owner', 'children').filter(
             owner=user)
 
     def get_serializer_class(self):

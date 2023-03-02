@@ -19,6 +19,7 @@ class SubdirectorySerializer(serializers.ModelSerializer):
 class DirectorySerializer(serializers.ModelSerializer):
     files = FileSerializer(many=True, read_only=True)
     owner = UserSerializer(read_only=True)
+    parent_dir = SubdirectorySerializer(read_only=True)
     children_dirs = SubdirectorySerializer(many=True, read_only=True, source='children')
 
     class Meta:
@@ -26,6 +27,7 @@ class DirectorySerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'name',
+            'parent_dir',
             'children_dirs',
             'files',
             'owner'
