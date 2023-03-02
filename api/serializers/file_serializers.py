@@ -9,13 +9,15 @@ from ..serializers.user_serializers import UserSerializer
 class FileSerializer(serializers.ModelSerializer):
     file = serializers.FileField()
     owner = UserSerializer(read_only=True)
+    shared_users = UserSerializer(many=True, read_only=True)
 
     class Meta:
         model = File
         fields = [
             'id',
             'file',
-            'owner'
+            'owner',
+            'shared_users'
         ]
 
 

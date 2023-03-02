@@ -14,7 +14,7 @@ class FileViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return File.objects.select_related('owner').filter(owner=user)
+        return File.objects.select_related('owner').prefetch_related('shared_users').filter(owner=user)
 
     def get_serializer_class(self):
         if self.action == 'create':
