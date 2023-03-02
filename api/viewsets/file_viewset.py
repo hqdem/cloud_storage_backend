@@ -5,10 +5,12 @@ from rest_framework.response import Response
 from ..models import File
 from ..serializers.file_serializers import FileSerializer, FileCreateSerializer
 from ..permissions.file_permissions import CheckFileOwner
+from ..filters.file_filters import RootFilesFilter
 
 
 class FileViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, CheckFileOwner]
+    filter_backends = [RootFilesFilter]
 
     def get_queryset(self):
         user = self.request.user

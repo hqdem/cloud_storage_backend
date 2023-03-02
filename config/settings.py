@@ -35,6 +35,7 @@ INSTALLED_APPS = [
 
     # 3-rd party
     'rest_framework',
+    'django_filters',
     'debug_toolbar',
     'rest_framework_simplejwt',
     'djoser'
