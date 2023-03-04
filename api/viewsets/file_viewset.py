@@ -1,11 +1,15 @@
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework import permissions
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from ..models import File
 from ..serializers.file_serializers import FileSerializer, FileCreateSerializer
 from ..permissions.file_permissions import CheckFileOwner
 from ..filters.file_filters import RootFilesFilter
+from ..serializers.user_serializers import UserSerializer
 
 
 class FileViewSet(viewsets.ModelViewSet):
@@ -19,6 +23,8 @@ class FileViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'create':
             return FileCreateSerializer
+        elif self.action == 'add_shared_user':
+            return UserSerializer
         return FileSerializer
 
     def create(self, request, *args, **kwargs):
@@ -31,3 +37,12 @@ class FileViewSet(viewsets.ModelViewSet):
                 return obj
             return Response(FileSerializer(obj).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['post'])  # TODO: add implementation of deleting
+    def add_shared_user(self, request, pk):
+        data = request.data
+        obj = self.get_object()
+
+        user = get_object_or_404(get_user_model(), username=data['username'])
+        obj.shared_users.add(user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
