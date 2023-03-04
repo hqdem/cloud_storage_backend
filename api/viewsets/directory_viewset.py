@@ -18,11 +18,13 @@ class DirectoryViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return Directory.objects.select_related('owner', 'parent_dir').prefetch_related('files', 'files__owner',
-                                                                                        'files__shared_users',
-                                                                                        'children',
-                                                                                        'shared_users').filter(
-            owner=user)
+        queryset = Directory.objects.select_related('owner', 'parent_dir').prefetch_related('files', 'files__owner',
+                                                                                            'files__shared_users',
+                                                                                            'children',
+                                                                                            'shared_users')
+        if self.action == 'list':
+            return queryset.filter(owner=user)
+        return queryset
 
     def get_serializer_class(self):
         if self.action == 'create':
