@@ -1,3 +1,5 @@
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework import permissions
 from rest_framework.decorators import action
@@ -7,6 +9,7 @@ from ..models import Directory, File
 from ..serializers.directory_serializers import DirectorySerializer, DirectoryCreateSerializer
 from ..permissions.directory_permissions import CheckDirectoryOwner
 from ..filters.directory_filters import RootDirectoryFilter
+from ..serializers.user_serializers import UserSerializer
 
 
 class DirectoryViewSet(viewsets.ModelViewSet):
@@ -24,6 +27,8 @@ class DirectoryViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'create':
             return DirectoryCreateSerializer
+        elif self.action == 'add_shared_user':
+            return UserSerializer
         return DirectorySerializer
 
     def create(self, request, *args, **kwargs):
@@ -50,4 +55,13 @@ class DirectoryViewSet(viewsets.ModelViewSet):
         created_objs = File.objects.bulk_create(files_obj_list)
 
         directory.files.add(*created_objs)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=['post'])
+    def add_shared_user(self, request, pk):
+        data = request.data
+        obj = self.get_object()
+
+        user = get_object_or_404(get_user_model(), username=data['username'])
+        obj.shared_users.add(user)
         return Response(status=status.HTTP_204_NO_CONTENT)
