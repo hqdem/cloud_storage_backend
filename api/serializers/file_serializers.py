@@ -41,8 +41,8 @@ class FileCreateSerializer(serializers.ModelSerializer):
         if parent_dir_id is not None:
             try:
                 parent_dir = Directory.objects.get(id=parent_dir_id)
+                file.directory = parent_dir
                 file.save()
-                parent_dir.files.add(file)
                 return file
             except ObjectDoesNotExist:
                 return Response({'detail': {

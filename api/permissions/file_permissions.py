@@ -7,7 +7,8 @@ class CheckFileOwner(permissions.BasePermission):
         if user == obj.owner or user in obj.shared_users.all():
             return True
 
-        parent_dir = obj.dirs.all().first()  # TODO: Fix that m2m rel
+        parent_dir = obj.directory  # TODO: Fix that m2m rel
+        print(parent_dir)
         while parent_dir:
             if user in parent_dir.shared_users.all():
                 return True

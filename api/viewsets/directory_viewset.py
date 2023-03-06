@@ -53,10 +53,9 @@ class DirectoryViewSet(viewsets.ModelViewSet):
 
         files_obj_list = []
         for file in files:
-            files_obj_list.append(File(file=file, owner=owner))
-        created_objs = File.objects.bulk_create(files_obj_list)
+            files_obj_list.append(File(file=file, owner=owner, directory=directory))
+        File.objects.bulk_create(files_obj_list)
 
-        directory.files.add(*created_objs)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=['post'])  # TODO: add implementation of deleting
