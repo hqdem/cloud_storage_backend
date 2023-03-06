@@ -58,7 +58,7 @@ class DirectoryViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=True, methods=['post'])  # TODO: add implementation of deleting
+    @action(detail=True, methods=['post'])
     def add_shared_user(self, request, pk):
         data = request.data
         obj = self.get_object()

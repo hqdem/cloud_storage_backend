@@ -41,7 +41,7 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response(FileSerializer(obj).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=True, methods=['post'])  # TODO: add implementation of deleting
+    @action(detail=True, methods=['post'])
     def add_shared_user(self, request, pk):
         data = request.data
         obj = self.get_object()
