@@ -26,7 +26,7 @@ class FileViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'create':
             return FileCreateSerializer
-        elif self.action == 'add_shared_user':
+        elif self.action in ['add_shared_user', 'delete_shared_user']:
             return UserSerializer
         return FileSerializer
 
@@ -48,4 +48,13 @@ class FileViewSet(viewsets.ModelViewSet):
 
         user = get_object_or_404(get_user_model(), username=data['username'])
         obj.shared_users.add(user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=['post'])
+    def delete_shared_user(self, request, pk):
+        data = request.data
+        obj = self.get_object()
+
+        user = get_object_or_404(get_user_model(), username=data['username'])
+        obj.shared_users.remove(user)
         return Response(status=status.HTTP_204_NO_CONTENT)
