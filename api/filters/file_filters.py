@@ -6,4 +6,4 @@ class RootFilesFilter(filters.BaseFilterBackend):
         only_root = request.query_params.get('only_root', None)
         if only_root is None:
             return queryset
-        return queryset.filter(dirs=None)
+        return queryset.filter(directory=None)
