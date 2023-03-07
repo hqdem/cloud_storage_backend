@@ -57,6 +57,8 @@ class DirectoryCreateSerializer(serializers.ModelSerializer):
         if parent_dir_id is not None:
             try:
                 parent_dir = Directory.objects.get(id=parent_dir_id)
+                if user != parent_dir.owner and user not in parent_dir.shared_users.all():
+                    return Response({'detail': "Can't create subdirectory. Permission denied"}, status=status.HTTP_403_FORBIDDEN)
                 directory.parent_dir = parent_dir
             except ObjectDoesNotExist:
                 return Response({'detail': {
