@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework import permissions
@@ -20,7 +21,7 @@ class FileViewSet(viewsets.ModelViewSet):
         user = self.request.user
         queryset = File.objects.select_related('owner').prefetch_related('shared_users')
         if self.action == 'list':
-            return queryset.filter(owner=user)
+            return queryset.filter(Q(owner=user) | Q(id__in=user.sharing_files.all()))
         return queryset
 
     def get_serializer_class(self):
