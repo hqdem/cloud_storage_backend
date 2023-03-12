@@ -38,12 +38,14 @@ INSTALLED_APPS = [
     'django_filters',
     'debug_toolbar',
     'rest_framework_simplejwt',
+    'corsheaders',
     'djoser'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -159,3 +161,8 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
 }
+
+# CORS
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:5173'
+]
