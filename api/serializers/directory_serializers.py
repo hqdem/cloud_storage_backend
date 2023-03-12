@@ -8,11 +8,14 @@ from ..serializers.user_serializers import UserSerializer
 
 
 class SubdirectorySerializer(serializers.ModelSerializer):
+    owner = UserSerializer(read_only=True)
+
     class Meta:
         model = Directory
         fields = [
             'id',
-            'name'
+            'name',
+            'owner'
         ]
 
 

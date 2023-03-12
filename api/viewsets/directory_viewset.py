@@ -22,7 +22,8 @@ class DirectoryViewSet(viewsets.ModelViewSet):
         queryset = Directory.objects.select_related('owner', 'parent_dir').prefetch_related('files', 'files__owner',
                                                                                             'files__shared_users',
                                                                                             'children',
-                                                                                            'shared_users')
+                                                                                            'shared_users',
+                                                                                            'children__owner')
         if self.action == 'list':
             return queryset.filter(Q(owner=user) | Q(id__in=user.sharing_dirs.all()))
         return queryset
